@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Original Gravity & Calorie Calculator</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #1d1d1f;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 380px;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1d1d1f;
+        }
+
+        p {
+            font-size: 16px;
+            color: #6e6e73;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1d1d1f;
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d2d2d7;
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: #f5f5f7;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #007aff;
+        }
+
+        button {
+            background-color: #007aff;
+            color: #ffffff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #0062cc;
+        }
+
+        #result {
+            margin-top: 30px;
+        }
+
+        #result h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin: 0;
+        }
+
+        #og-value, #calorie-value {
+            font-size: 22px;
+            font-weight: 500;
+            color: #007aff;
+            margin: 5px 0; /* Reduced from 10px to 5px */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Original Gravity & Calorie Calculator</h1>
+        <p>Calculate Original Gravity and Calorie Content from Final Gravity and Alcohol Percentage.</p>
+        
+        <div class="input-group">
+            <label for="fg">Final Gravity (FG)</label>
+            <input type="number" id="fg" step="0.001" placeholder="e.g., 1.010" required>
+        </div>
+        
+        <div class="input-group">
+            <label for="av">Alcohol Percentage by Volume (A%v)</label>
+            <input type="number" id="av" step="0.01" placeholder="e.g., 5.5" required>
+        </div>
+        
+        <button onclick="calculateOG()">Calculate</button>
+        
+        <div id="result">
+            <h3>Results</h3>
+            <p id="og-value">Enter values to see OG</p>
+            <p id="calorie-value">Enter values to see Calories</p>
+        </div>
+    </div>
+
+    <script>
+        function calculateOG() {
+            // Get input values
+            const fg = parseFloat(document.getElementById('fg').value);
+            const av = parseFloat(document.getElementById('av').value);
+
+            // Check if inputs are valid
+            if (isNaN(fg) || isNaN(av)) {
+                document.getElementById('og-value').innerText = "Please enter valid numbers.";
+                document.getElementById('calorie-value').innerText = "Please enter valid numbers.";
+                return;
+            }
+
+            // Constants for OG calculation
+            const a = 76.08;
+            const b = 0.794;
+            const c = 1.775;
+
+            // Calculate OG
+            const numerator = (av * b * c) + (a * fg * fg);
+            const denominator = (a * fg) + (av * b);
+            const og = numerator / denominator;
+
+            // Calculate Calorie Content
+            const calorieContent = 3621 * fg * (
+                (0.8114 * fg + 0.1886 * og - 1) + 
+                0.53 * ((og - fg) / (1.775 - og))
+            );
+
+            // Display results
+            document.getElementById('og-value').innerText = `OG: ${og.toFixed(3)}`;
+            document.getElementById('calorie-value').innerText = `Calories: ${calorieContent.toFixed(0)} cal`;
+        }
+    </script>
+</body>
+</html>
