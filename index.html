@@ -50,7 +50,7 @@
         }
 
         .input-group {
-            margin: 20px 0;
+            margin: 10px 0; /* Consistent margin for all input groups */
             text-align: left;
         }
 
@@ -114,20 +114,17 @@
             position: relative;
         }
 
-        /* Two-column layout for calculator inputs */
+        /* Grid layout for calculator inputs */
         .calculator-columns {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two equal columns */
             gap: 20px; /* Space between columns */
+            width: 100%; /* Match the width of the motherbox content */
         }
 
         .column {
-            flex: 1; /* Each column takes equal space */
-            max-width: calc((380px - 20px) / 2); /* Total width minus gap, divided by 2 */
-        }
-
-        .column .input-group {
-            margin: 10px 0; /* Reduced margin for tighter vertical spacing in columns */
+            display: flex;
+            flex-direction: column;
         }
 
         .result {
@@ -182,8 +179,8 @@
                 font-size: 14px;
             }
 
-            .column {
-                max-width: calc((100% - 20px) / 2); /* Adjust for responsive width */
+            .calculator-columns {
+                gap: 15px; /* Slightly smaller gap on smaller screens */
             }
 
             .result h3 {
