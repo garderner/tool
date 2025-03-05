@@ -50,7 +50,7 @@
         }
 
         .input-group {
-            margin: 10px 0; /* Consistent margin for all input groups */
+            margin: 10px 0;
             text-align: left;
         }
 
@@ -79,6 +79,11 @@
             box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
         }
 
+        /* Define placeholder color explicitly to match suffix */
+        input::placeholder {
+            color: #999; /* Common default placeholder color */
+        }
+
         .input-with-suffix {
             position: relative;
             display: flex;
@@ -96,7 +101,7 @@
             transform: translateY(-50%);
             font-size: 16px;
             font-weight: 500;
-            color: #6e6e73;
+            color: #999; /* Match placeholder color */
             pointer-events: none;
         }
 
@@ -114,12 +119,11 @@
             position: relative;
         }
 
-        /* Grid layout for calculator inputs */
         .calculator-columns {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Two equal columns */
-            gap: 20px; /* Space between columns */
-            width: 100%; /* Match the width of the motherbox content */
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
         }
 
         .column {
@@ -180,7 +184,7 @@
             }
 
             .calculator-columns {
-                gap: 15px; /* Slightly smaller gap on smaller screens */
+                gap: 15px;
             }
 
             .result h3 {
@@ -239,9 +243,10 @@
                         </div>
                     </div>
                     <div class="input-group">
-                        <label for="celsiusInput">Product Temperature in °C</label>
+                        <label for="celsiusInput">Product Temperature</label>
                         <div class="input-with-suffix">
                             <input type="number" id="celsiusInput" placeholder="e.g., 20">
+                            <span class="suffix">°C</span>
                         </div>
                     </div>
                 </div>
