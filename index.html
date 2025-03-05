@@ -114,6 +114,22 @@
             position: relative;
         }
 
+        /* Two-column layout for calculator inputs */
+        .calculator-columns {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px; /* Space between columns */
+        }
+
+        .column {
+            flex: 1; /* Each column takes equal space */
+            max-width: calc((380px - 20px) / 2); /* Total width minus gap, divided by 2 */
+        }
+
+        .column .input-group {
+            margin: 10px 0; /* Reduced margin for tighter vertical spacing in columns */
+        }
+
         .result {
             margin-top: 20px;
             text-align: left;
@@ -166,6 +182,10 @@
                 font-size: 14px;
             }
 
+            .column {
+                max-width: calc((100% - 20px) / 2); /* Adjust for responsive width */
+            }
+
             .result h3 {
                 font-size: 16px;
             }
@@ -198,29 +218,35 @@
 
         <!-- Combined Calculator Section -->
         <div class="calculator-section">
-            <div class="input-group">
-                <label for="av">ABV</label>
-                <div class="input-with-suffix">
-                    <input type="number" id="av" step="0.01" placeholder="e.g., 5.5" required>
+            <div class="calculator-columns">
+                <div class="column">
+                    <div class="input-group">
+                        <label for="av">ABV</label>
+                        <div class="input-with-suffix">
+                            <input type="number" id="av" step="0.01" placeholder="e.g., 5.5" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="fg">Final Gravity</label>
+                        <div class="input-with-suffix">
+                            <input type="number" id="fg" step="0.001" placeholder="e.g., 1.010" required>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="input-group">
-                <label for="volume">Volume</label>
-                <div class="input-with-suffix">
-                    <input type="text" id="volume" placeholder="e.g., 33">
-                    <span class="suffix">cl</span>
-                </div>
-            </div>
-            <div class="input-group">
-                <label for="fg">Final Gravity</label>
-                <div class="input-with-suffix">
-                    <input type="number" id="fg" step="0.001" placeholder="e.g., 1.010" required>
-                </div>
-            </div>
-            <div class="input-group">
-                <label for="celsiusInput">Product Temperature in °C</label>
-                <div class="input-with-suffix">
-                    <input type="number" id="celsiusInput" placeholder="e.g., 20">
+                <div class="column">
+                    <div class="input-group">
+                        <label for="volume">Volume</label>
+                        <div class="input-with-suffix">
+                            <input type="text" id="volume" placeholder="e.g., 33">
+                            <span class="suffix">cl</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="celsiusInput">Product Temperature in °C</label>
+                        <div class="input-with-suffix">
+                            <input type="number" id="celsiusInput" placeholder="e.g., 20">
+                        </div>
+                    </div>
                 </div>
             </div>
             
