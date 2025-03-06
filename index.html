@@ -18,8 +18,8 @@
             background: linear-gradient(180deg, #f5f5f7 0%, #ffffff 100%);
             background-attachment: fixed;
             display: flex;
-            flex-direction: column; /* Stack containers vertically */
-            align-items: center; /* Center horizontally */
+            flex-direction: column;
+            align-items: center;
             min-height: 100vh;
             color: #1d1d1f;
             padding: 20px;
@@ -38,7 +38,7 @@
             box-sizing: border-box;
             max-height: none;
             overflow-y: visible;
-            margin-bottom: 20px; /* Space between motherbox and save-container */
+            margin-bottom: 20px;
         }
 
         .motherbox:hover {
@@ -229,11 +229,11 @@
         /* Save container styles */
         .save-container {
             background-color: #ffffff;
-            padding: 20px; /* Reduced padding for a smaller box */
+            padding: 20px;
             border-radius: 18px;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             text-align: center;
-            width: 600px; /* Match motherbox width */
+            width: 600px;
             transition: all 0.3s ease;
             box-sizing: border-box;
         }
@@ -300,7 +300,7 @@
             }
 
             .save-container {
-                padding: 20px; /* Consistent padding on smaller screens */
+                padding: 20px;
             }
 
             .save-button {
@@ -404,7 +404,6 @@
         </div>
     </div>
 
-    <!-- Separate Save Container -->
     <div class="save-container">
         <button class="save-button" id="save-button">Save</button>
     </div>
@@ -541,19 +540,39 @@
             colorInput.classList.add('color-selected');
         });
 
-        // Save button functionality
+        // Save button functionality with date fix
         const saveButton = document.getElementById('save-button');
         saveButton.addEventListener('click', () => {
             const motherbox = document.querySelector('.motherbox');
+            const dateInput = document.getElementById('date');
+            const dateLabel = document.querySelector('label[for="date"]');
+
+            // Store original styles
+            const originalPadding = dateInput.style.padding;
+            const originalLabelTop = dateLabel.style.top;
+
+            // Temporarily adjust styles for screenshot (mobile fix)
+            if (window.innerWidth <= 820 && dateInput.value) {
+                dateInput.style.padding = '22px 12px 8px 12px'; // Increase top padding
+                dateLabel.style.top = '3px'; // Move label higher
+            }
+
             html2canvas(motherbox, {
                 scale: 2,
                 backgroundColor: '#ffffff'
             }).then(canvas => {
+                // Revert styles after screenshot
+                dateInput.style.padding = originalPadding || '';
+                dateLabel.style.top = originalLabelTop || '';
+
                 const link = document.createElement('a');
                 link.download = 'beer_specs.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             }).catch(err => {
+                // Revert styles even if there's an error
+                dateInput.style.padding = originalPadding || '';
+                dateLabel.style.top = originalLabelTop || '';
                 console.error('Error capturing screenshot:', err);
                 alert('Failed to save screenshot. Please try again.');
             });
