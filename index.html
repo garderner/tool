@@ -2,21 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Technical Sheets</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600&display=swap');
 
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
         body {
             font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", Arial, sans-serif;
             background: linear-gradient(180deg, #f5f5f7 0%, #ffffff 100%);
+            background-attachment: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
             color: #1d1d1f;
             padding: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .motherbox {
@@ -28,6 +40,8 @@
             width: 600px;
             transition: all 0.3s ease;
             box-sizing: border-box;
+            max-height: 100vh;
+            overflow-y: auto;
         }
 
         .motherbox:hover {
@@ -68,6 +82,11 @@
         .column {
             flex: 1;
             max-width: calc(50% - 10px);
+        }
+
+        .column:last-child .input-group:last-child,
+        .column:first-child .input-group:last-child {
+            margin-bottom: 0;
         }
 
         .input-container {
@@ -119,10 +138,12 @@
             position: relative;
             display: flex;
             align-items: center;
+            width: 100%;
         }
 
         .input-with-suffix input {
             padding-right: 30px;
+            width: 100%;
         }
 
         .input-with-suffix .suffix {
@@ -151,41 +172,46 @@
             text-align: left;
         }
 
-        .result h3 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1d1d1f;
-            margin: 0 0 10px 0;
-        }
-
         .result-box {
-            background-color: #f5f5f7;
-            padding: 12px;
-            border-radius: 8px;
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
-        #og-value, #calorie-value, #corrected-sg-value, #corrected-p-value {
-            font-size: 18px;
-            font-weight: 500;
-            color: #007aff;
-            margin: 0;
-            line-height: 1.4;
+        .result-box .row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 20px;
+        }
+
+        .result-box .row .input-container,
+        .result-box .row .input-with-suffix {
+            flex: 1;
+            max-width: calc(50% - 10px);
+        }
+
+        /* Beer Color specific styles */
+        .beer-color-container {
+            position: relative;
+            width: 100%;
         }
 
         #color-input {
             cursor: pointer;
         }
 
+        .beer-color-group {
+            margin-bottom: 0; /* Remove bottom margin for Beer Color */
+        }
+
         .color-strip {
             display: none;
             position: absolute;
-            top: 100%;
+            top: 0;
             left: 0;
             width: 100%;
-            height: 20px;
+            height: 55px;
             background: linear-gradient(to right, 
                 #F6F513 0%, #F6F513 14.28%,
                 #BF923B 14.28%, #BF923B 28.56%,
@@ -194,10 +220,9 @@
                 #5D341A 57.12%, #5D341A 71.4%,
                 #261716 71.4%, #261716 85.68%,
                 #030403 85.68%, #030403 100%);
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
             z-index: 10;
-            margin-top: 5px;
         }
 
         .color-strip.visible {
@@ -236,12 +261,13 @@
                 font-size: 14px;
             }
 
-            .result h3 {
-                font-size: 16px;
+            .result-box .row .input-container,
+            .result-box .row .input-with-suffix {
+                max-width: 100%;
             }
 
-            #og-value, #calorie-value, #corrected-sg-value, #corrected-p-value {
-                font-size: 16px;
+            .color-strip {
+                height: 50px;
             }
         }
     </style>
@@ -269,11 +295,11 @@
                     <label for="beer-style">Beer Style</label>
                 </div>
             </div>
-            <div class="input-group">
-                <div class="input-container">
+            <div class="input-group beer-color-group"> <!-- Added class for styling -->
+                <div class="input-container beer-color-container">
                     <input type="text" id="color-input" readonly placeholder=" ">
                     <label for="color-input">Beer Color</label>
-                    <div id="color-strip" class="color-strip"></div>
+                    <div class="color-strip" id="color-strip"></div>
                 </div>
             </div>
         </div>
@@ -305,7 +331,7 @@
                     <div class="input-group">
                         <div class="input-with-suffix">
                             <input type="number" id="celsiusInput" placeholder=" ">
-                            <label for="celsiusInput">Product Temperature</label>
+                            <label for="celsiusInput">Beer Temperature</label>
                             <span class="suffix">°C</span>
                         </div>
                     </div>
@@ -313,12 +339,28 @@
             </div>
             
             <div class="result">
-                <h3>Results</h3>
                 <div class="result-box">
-                    <p id="og-value">Enter values to see Original Gravity</p>
-                    <p id="calorie-value">Enter values to see Calories</p>
-                    <p id="corrected-sg-value">Enter temperature and SG to see Corrected SG</p>
-                    <p id="corrected-p-value"></p>
+                    <div class="row">
+                        <div class="input-container">
+                            <input type="text" id="corrected-sg-result" readonly placeholder=" ">
+                            <label for="corrected-sg-result">Corrected SG</label>
+                        </div>
+                        <div class="input-container">
+                            <input type="text" id="corrected-p-result" readonly placeholder=" ">
+                            <label for="corrected-p-result">Corrected °P</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-container">
+                            <input type="text" id="og-result" readonly placeholder=" ">
+                            <label for="og-result">Original Gravity</label>
+                        </div>
+                        <div class="input-with-suffix">
+                            <input type="text" id="calorie-result" readonly placeholder=" ">
+                            <label for="calorie-result">Calories</label>
+                            <span class="suffix">cal</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -369,6 +411,11 @@
             const volume = parseFloat(document.getElementById('volume').value);
             const celsius = parseFloat(document.getElementById('celsiusInput').value);
 
+            const ogResult = document.getElementById('og-result');
+            const calorieResult = document.getElementById('calorie-result');
+            const correctedSgResult = document.getElementById('corrected-sg-result');
+            const correctedPResult = document.getElementById('corrected-p-result');
+
             if (!isNaN(fg) && !isNaN(av)) {
                 const a = 76.08;
                 const b = 0.794;
@@ -383,11 +430,11 @@
                     0.53 * ((og - fg) / (1.775 - og)) * (isNaN(volume) ? 1 : volume / 33)
                 );
 
-                document.getElementById('og-value').innerText = `Original Gravity: ${og.toFixed(3)}`;
-                document.getElementById('calorie-value').innerText = `Calories: ${calorieContent.toFixed(0)} cal`;
+                ogResult.value = og.toFixed(3);
+                calorieResult.value = calorieContent.toFixed(0);
             } else {
-                document.getElementById('og-value').innerText = "Please enter FG and ABV for Original Gravity.";
-                document.getElementById('calorie-value').innerText = "Please enter FG and ABV for Calories.";
+                ogResult.value = '';
+                calorieResult.value = '';
             }
 
             if (!isNaN(celsius) && !isNaN(fg)) {
@@ -407,25 +454,30 @@
                 const correctedSG = (correctedSGPoints / 1000) + 1;
                 const correctedP = 1000 * (correctedSG - 1) / 4;
 
-                document.getElementById('corrected-sg-value').innerText = `Corrected SG: ${correctedSG.toFixed(3)}`;
-                document.getElementById('corrected-p-value').innerText = `Corrected °P: ${correctedP.toFixed(3)}`;
+                correctedSgResult.value = correctedSG.toFixed(3);
+                correctedPResult.value = correctedP.toFixed(3);
             } else {
-                document.getElementById('corrected-sg-value').innerText = "Please enter temperature and FG for Corrected SG.";
-                document.getElementById('corrected-p-value').innerText = "";
+                correctedSgResult.value = '';
+                correctedPResult.value = '';
             }
         }
 
-        // Color picker functionality
+        // Updated Beer Color functionality
         const colorInput = document.getElementById('color-input');
         const colorStrip = document.getElementById('color-strip');
+        const colorLabel = document.querySelector('label[for="color-input"]');
         const colors = ['#F6F513', '#BF923B', '#BC6733', '#8D4C32', '#5D341A', '#261716', '#030403'];
-        let isColorSelected = false;
+        const darkColors = ['#261716', '#5D341A', '#030403']; // Colors requiring white label
 
-        colorInput.addEventListener('click', () => {
-            colorStrip.classList.toggle('visible');
+        colorInput.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!colorStrip.classList.contains('visible')) {
+                colorStrip.classList.add('visible');
+            }
         });
 
         colorStrip.addEventListener('click', (e) => {
+            e.stopPropagation();
             const rect = colorStrip.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const segmentWidth = rect.width / 7;
@@ -435,16 +487,20 @@
             colorInput.style.backgroundColor = selectedColor;
             const luminance = calculateLuminance(selectedColor);
             colorInput.style.color = luminance > 0.5 ? '#1d1d1f' : '#ffffff';
-            colorInput.value = '';
-            colorInput.classList.add('color-selected'); // Add class to trigger fly-out
-            if (!isColorSelected) {
-                isColorSelected = true;
+            
+            // Set label color based on selected color
+            if (darkColors.includes(selectedColor)) {
+                colorLabel.style.color = '#ffffff';
+            } else {
+                colorLabel.style.color = '#1d1d1f'; // Default color for lighter backgrounds
             }
+
             colorStrip.classList.remove('visible');
+            colorInput.classList.add('color-selected');
         });
 
-        function calculateLuminance(hex) {
-            const rgb = hexToRgb(hex);
+        function calculateLuminance(color) {
+            const rgb = hexToRgb(color);
             return (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
         }
 
@@ -457,12 +513,6 @@
             } : null;
         }
 
-        document.addEventListener('click', (e) => {
-            if (!colorInput.contains(e.target) && !colorStrip.contains(e.target)) {
-                colorStrip.classList.remove('visible');
-            }
-        });
-
         const inputs = ['fg', 'av', 'celsiusInput', 'volume'];
         inputs.forEach(id => {
             document.getElementById(id).addEventListener('input', calculateAll);
@@ -470,6 +520,9 @@
 
         document.getElementById('beer').addEventListener('input', updateFieldsFromBeer);
         document.getElementById('beer-style').addEventListener('input', capitalizeBeerStyle);
+
+        // Initial calculation to set default values
+        calculateAll();
     </script>
 </body>
 </html>
