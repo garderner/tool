@@ -25,7 +25,7 @@
             border-radius: 18px;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             text-align: center;
-            width: 380px;
+            width: 600px;
             transition: all 0.3s ease;
             box-sizing: border-box;
         }
@@ -37,21 +37,26 @@
         h1 {
             font-size: 28px;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             color: #1d1d1f;
         }
 
         .info-section {
-            margin-bottom: 20px;
+            /* No margin-bottom to rely on input-group margins */
         }
 
         .calculator-section {
-            margin-bottom: 40px;
+            margin: 0 0 40px 0;
         }
 
         .input-group {
             margin: 20px 0;
             text-align: left;
+            position: relative;
+        }
+
+        .beer-style-group {
+            margin: 20px 0 0 0;
         }
 
         .columns-container {
@@ -65,17 +70,15 @@
             max-width: calc(50% - 10px);
         }
 
-        label {
-            display: block;
-            font-size: 14px;
-            font-weight: 500;
-            color: #1d1d1f;
-            margin-bottom: 6px;
+        .input-container {
+            position: relative;
+            width: 100%;
         }
 
         input {
             width: 100%;
-            padding: 12px;
+            height: 55px;
+            padding: 20px 12px 10px 12px;
             border: 1px solid #d2d2d7;
             border-radius: 10px;
             font-size: 16px;
@@ -88,6 +91,28 @@
             outline: none;
             border-color: #007aff;
             box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+        }
+
+        label {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            font-weight: 400;
+            color: #6e6e73;
+            pointer-events: none;
+            transition: all 0.2s ease;
+        }
+
+        input:focus + label,
+        input:not(:placeholder-shown) + label,
+        #color-input.color-selected + label {
+            top: 8px;
+            transform: translateY(0);
+            font-size: 12px;
+            font-weight: 500;
+            color: #1d1d1f;
         }
 
         .input-with-suffix {
@@ -150,11 +175,40 @@
             line-height: 1.4;
         }
 
+        #color-input {
+            cursor: pointer;
+        }
+
+        .color-strip {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(to right, 
+                #F6F513 0%, #F6F513 14.28%,
+                #BF923B 14.28%, #BF923B 28.56%,
+                #BC6733 28.56%, #BC6733 42.84%,
+                #8D4C32 42.84%, #8D4C32 57.12%,
+                #5D341A 57.12%, #5D341A 71.4%,
+                #261716 71.4%, #261716 85.68%,
+                #030403 85.68%, #030403 100%);
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            margin-top: 5px;
+        }
+
+        .color-strip.visible {
+            display: block;
+        }
+
         @media (max-width: 820px) {
             .motherbox {
                 padding: 30px;
                 width: 100%;
-                max-width: 380px;
+                max-width: 600px;
             }
 
             h1 {
@@ -162,11 +216,20 @@
             }
 
             label {
-                font-size: 12px;
+                font-size: 14px;
             }
 
             input {
                 font-size: 14px;
+                height: 50px;
+                padding: 18px 12px 8px 12px;
+            }
+
+            input:focus + label,
+            input:not(:placeholder-shown) + label,
+            #color-input.color-selected + label {
+                font-size: 10px;
+                top: 7px;
             }
 
             .input-with-suffix .suffix {
@@ -189,16 +252,29 @@
         
         <div class="info-section">
             <div class="input-group">
-                <label for="date">Date</label>
-                <input type="date" id="date">
+                <div class="input-container">
+                    <input type="date" id="date" placeholder=" ">
+                    <label for="date">Date</label>
+                </div>
             </div>
             <div class="input-group">
-                <label for="beer">Beer</label>
-                <input type="text" id="beer" placeholder="e.g., Omnipollo Fatamorgana 8% 33cl">
+                <div class="input-container">
+                    <input type="text" id="beer" placeholder=" ">
+                    <label for="beer">Beer Name</label>
+                </div>
+            </div>
+            <div class="input-group beer-style-group">
+                <div class="input-container">
+                    <input type="text" id="beer-style" placeholder=" ">
+                    <label for="beer-style">Beer Style</label>
+                </div>
             </div>
             <div class="input-group">
-                <label for="beer-style">Beer Style</label>
-                <input type="text" id="beer-style" placeholder="e.g., Double India Pale Ale">
+                <div class="input-container">
+                    <input type="text" id="color-input" readonly placeholder=" ">
+                    <label for="color-input">Beer Color</label>
+                    <div id="color-strip" class="color-strip"></div>
+                </div>
             </div>
         </div>
 
@@ -206,30 +282,30 @@
             <div class="columns-container">
                 <div class="column">
                     <div class="input-group">
-                        <label for="av">ABV</label>
-                        <div class="input-with-suffix">
-                            <input type="number" id="av" step="0.01" placeholder="e.g., 5.5" required>
+                        <div class="input-container">
+                            <input type="number" id="av" step="0.01" placeholder=" ">
+                            <label for="av">ABV</label>
                         </div>
                     </div>
                     <div class="input-group">
-                        <label for="fg">Final Gravity</label>
-                        <div class="input-with-suffix">
-                            <input type="number" id="fg" step="0.001" placeholder="e.g., 1.010" required>
+                        <div class="input-container">
+                            <input type="number" id="fg" step="0.001" placeholder=" ">
+                            <label for="fg">Final Gravity</label>
                         </div>
                     </div>
                 </div>
                 <div class="column">
                     <div class="input-group">
-                        <label for="volume">Volume</label>
                         <div class="input-with-suffix">
-                            <input type="text" id="volume" placeholder="e.g., 33">
+                            <input type="text" id="volume" placeholder=" ">
+                            <label for="volume">Volume</label>
                             <span class="suffix">cl</span>
                         </div>
                     </div>
                     <div class="input-group">
-                        <label for="celsiusInput">Product Temperature</label>
                         <div class="input-with-suffix">
-                            <input type="number" id="celsiusInput" placeholder="e.g., 20">
+                            <input type="number" id="celsiusInput" placeholder=" ">
+                            <label for="celsiusInput">Product Temperature</label>
                             <span class="suffix">°C</span>
                         </div>
                     </div>
@@ -249,12 +325,19 @@
     </div>
 
     <script>
+        function capitalizeWords(str) {
+            return str.replace(/\b\w/g, char => char.toUpperCase());
+        }
+
         function updateFieldsFromBeer() {
-            const beerInput = document.getElementById('beer').value;
+            const beerInput = document.getElementById('beer');
             const abvInput = document.getElementById('av');
             const volumeInput = document.getElementById('volume');
             
-            const abvMatch = beerInput.match(/(\d*\.?\d+)%/);
+            let beerValue = beerInput.value;
+            beerInput.value = capitalizeWords(beerValue);
+            
+            const abvMatch = beerValue.match(/(\d*\.?\d+)%/);
             if (abvMatch) {
                 const abvValue = parseFloat(abvMatch[1]);
                 abvInput.value = abvValue;
@@ -263,7 +346,7 @@
                 abvInput.value = '';
             }
 
-            const volumeMatch = beerInput.match(/(\d*\.?\d+)cl/);
+            const volumeMatch = beerValue.match(/(\d*\.?\d+)cl/);
             if (volumeMatch) {
                 const volumeValue = volumeMatch[1];
                 volumeInput.value = volumeValue;
@@ -273,6 +356,11 @@
             }
 
             calculateAll();
+        }
+
+        function capitalizeBeerStyle() {
+            const beerStyleInput = document.getElementById('beer-style');
+            beerStyleInput.value = capitalizeWords(beerStyleInput.value);
         }
 
         function calculateAll() {
@@ -327,12 +415,61 @@
             }
         }
 
+        // Color picker functionality
+        const colorInput = document.getElementById('color-input');
+        const colorStrip = document.getElementById('color-strip');
+        const colors = ['#F6F513', '#BF923B', '#BC6733', '#8D4C32', '#5D341A', '#261716', '#030403'];
+        let isColorSelected = false;
+
+        colorInput.addEventListener('click', () => {
+            colorStrip.classList.toggle('visible');
+        });
+
+        colorStrip.addEventListener('click', (e) => {
+            const rect = colorStrip.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const segmentWidth = rect.width / 7;
+            const selectedIndex = Math.floor(x / segmentWidth);
+            const selectedColor = colors[selectedIndex];
+            
+            colorInput.style.backgroundColor = selectedColor;
+            const luminance = calculateLuminance(selectedColor);
+            colorInput.style.color = luminance > 0.5 ? '#1d1d1f' : '#ffffff';
+            colorInput.value = '';
+            colorInput.classList.add('color-selected'); // Add class to trigger fly-out
+            if (!isColorSelected) {
+                isColorSelected = true;
+            }
+            colorStrip.classList.remove('visible');
+        });
+
+        function calculateLuminance(hex) {
+            const rgb = hexToRgb(hex);
+            return (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+        }
+
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!colorInput.contains(e.target) && !colorStrip.contains(e.target)) {
+                colorStrip.classList.remove('visible');
+            }
+        });
+
         const inputs = ['fg', 'av', 'celsiusInput', 'volume'];
         inputs.forEach(id => {
             document.getElementById(id).addEventListener('input', calculateAll);
         });
 
         document.getElementById('beer').addEventListener('input', updateFieldsFromBeer);
+        document.getElementById('beer-style').addEventListener('input', capitalizeBeerStyle);
     </script>
 </body>
 </html>
