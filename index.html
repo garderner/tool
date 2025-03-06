@@ -540,12 +540,13 @@
             colorInput.classList.add('color-selected');
         });
 
-        // Save button functionality with date fix
+        // Save button functionality with dynamic filename
         const saveButton = document.getElementById('save-button');
         saveButton.addEventListener('click', () => {
             const motherbox = document.querySelector('.motherbox');
             const dateInput = document.getElementById('date');
             const dateLabel = document.querySelector('label[for="date"]');
+            const beerInput = document.getElementById('beer');
 
             // Store original styles
             const originalPadding = dateInput.style.padding;
@@ -553,9 +554,27 @@
 
             // Temporarily adjust styles for screenshot (mobile fix)
             if (window.innerWidth <= 820 && dateInput.value) {
-                dateInput.style.padding = '22px 12px 8px 12px'; // Increase top padding
-                dateLabel.style.top = '3px'; // Move label higher
+                dateInput.style.padding = '22px 12px 8px 12px';
+                dateLabel.style.top = '3px';
             }
+
+            // Construct filename
+            let filename = 'beer_specs'; // Default if no inputs
+            const dateValue = dateInput.value; // e.g., "2025-03-25"
+            const beerValue = beerInput.value.trim(); // e.g., "Omnipollo 8.2% 33cl"
+
+            if (dateValue) {
+                const dateParts = dateValue.split('-'); // ["2025", "03", "25"]
+                const dateStr = dateParts[0].slice(-2) + dateParts[1] + dateParts[2]; // "250325"
+                filename = dateStr;
+            }
+
+            if (beerValue) {
+                const beerName = beerValue.split(/[\s%]/)[0]; // Split on space or %, take first part: "Omnipollo"
+                filename = dateValue ? `${filename}_${beerName}` : beerName;
+            }
+
+            filename = filename.replace(/[^a-zA-Z0-9_]/g, '') + '.png'; // Clean filename, add extension
 
             html2canvas(motherbox, {
                 scale: 2,
@@ -566,7 +585,7 @@
                 dateLabel.style.top = originalLabelTop || '';
 
                 const link = document.createElement('a');
-                link.download = 'beer_specs.png';
+                link.download = filename; // Dynamic filename, e.g., "250325_Omnipollo.png"
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             }).catch(err => {
