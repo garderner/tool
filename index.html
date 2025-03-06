@@ -531,7 +531,10 @@
             const luminance = calculateLuminance(selectedColor);
             colorInput.style.color = luminance > 0.5 ? '#E8ECEF' : '#FFFFFF';
             
-            if (darkColors.includes(selectedColor)) {
+            // Special case for #F6F513
+            if (selectedColor.toUpperCase() === '#F6F513') {
+                colorLabel.style.color = '#030403'; // Near-black for bright yellow
+            } else if (darkColors.includes(selectedColor)) {
                 colorLabel.style.color = '#FFFFFF';
             } else {
                 colorLabel.style.color = '#E8ECEF';
@@ -557,14 +560,14 @@
 
             // Temporarily adjust date input for screenshot (mobile fix)
             if (window.innerWidth <= 820 && originalValue) {
-                dateInput.type = 'text'; // Change to text input
-                dateInput.value = originalValue; // Set value as text (e.g., "2025-03-25")
-                dateInput.classList.add('color-selected'); // Trigger label movement
+                dateInput.type = 'text';
+                dateInput.value = originalValue;
+                dateInput.classList.add('color-selected');
             }
 
             // Construct filename
             let filename = 'beer_specs';
-            const dateValue = originalValue; // Use original value for filename
+            const dateValue = originalValue;
             const beerValue = beerInput.value.trim();
 
             if (dateValue) {
