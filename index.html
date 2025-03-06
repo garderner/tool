@@ -15,23 +15,23 @@
 
         body {
             font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", Arial, sans-serif;
-            background: linear-gradient(180deg, #1C2526 0%, #212121 100%); /* Dark gradient */
+            background: linear-gradient(180deg, #1C2526 0%, #212121 100%);
             background-attachment: fixed;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            color: #E8ECEF; /* Light gray text */
+            color: #E8ECEF;
             padding: 20px;
             width: 100%;
             box-sizing: border-box;
         }
 
         .motherbox {
-            background-color: #2C2C2E; /* Darker gray container */
+            background-color: #2C2C2E;
             padding: 40px;
             border-radius: 18px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
             text-align: center;
             width: 600px;
             transition: all 0.3s ease;
@@ -42,14 +42,14 @@
         }
 
         .motherbox:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* Slightly stronger shadow */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
 
         h1 {
             font-size: 28px;
             font-weight: 600;
             margin-bottom: 20px;
-            color: #FFFFFF; /* White for emphasis */
+            color: #FFFFFF;
         }
 
         .info-section {
@@ -99,19 +99,19 @@
             width: 100%;
             height: 55px;
             padding: 20px 12px 10px 12px;
-            border: 1px solid #3C3C3E; /* Dark border */
+            border: 1px solid #3C3C3E;
             border-radius: 10px;
             font-size: 16px;
-            background-color: #3C3C3E; /* Dark input background */
-            color: #E8ECEF; /* Light text */
+            background-color: #3C3C3E;
+            color: #E8ECEF;
             box-sizing: border-box;
             transition: border-color 0.2s ease;
         }
 
         input:focus {
             outline: none;
-            border-color: #007AFF; /* Apple blue */
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3); /* Subtle blue glow */
+            border-color: #007AFF;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
         }
 
         label {
@@ -121,7 +121,7 @@
             transform: translateY(-50%);
             font-size: 16px;
             font-weight: 400;
-            color: #8E8E93; /* Gray placeholder-like color */
+            color: #8E8E93;
             pointer-events: none;
             transition: all 0.2s ease;
         }
@@ -133,7 +133,7 @@
             transform: translateY(0);
             font-size: 12px;
             font-weight: 500;
-            color: #E8ECEF; /* Light gray when active */
+            color: #E8ECEF;
         }
 
         .input-with-suffix {
@@ -155,7 +155,7 @@
             transform: translateY(-50%);
             font-size: 16px;
             font-weight: 500;
-            color: #8E8E93; /* Gray suffix */
+            color: #8E8E93;
             pointer-events: none;
         }
 
@@ -229,7 +229,7 @@
 
         /* Save container styles */
         .save-container {
-            background-color: #2C2C2E; /* Match motherbox */
+            background-color: #2C2C2E;
             padding: 20px;
             border-radius: 18px;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
@@ -248,7 +248,7 @@
             font-size: 16px;
             font-weight: 600;
             color: #FFFFFF;
-            background-color: #007AFF; /* Apple blue */
+            background-color: #007AFF;
             border: none;
             border-radius: 10px;
             cursor: pointer;
@@ -256,7 +256,7 @@
         }
 
         .save-button:hover {
-            background-color: #005BB5; /* Darker blue */
+            background-color: #005BB5;
         }
 
         @media (max-width: 820px) {
@@ -529,7 +529,7 @@
             
             colorInput.style.backgroundColor = selectedColor;
             const luminance = calculateLuminance(selectedColor);
-            colorInput.style.color = luminance > 0.5 ? '#E8ECEF' : '#FFFFFF'; /* Adjusted for dark mode */
+            colorInput.style.color = luminance > 0.5 ? '#E8ECEF' : '#FFFFFF';
             
             if (darkColors.includes(selectedColor)) {
                 colorLabel.style.color = '#FFFFFF';
@@ -541,7 +541,7 @@
             colorInput.classList.add('color-selected');
         });
 
-        // Save button functionality with dynamic filename
+        // Save button functionality with dynamic filename and date fix
         const saveButton = document.getElementById('save-button');
         saveButton.addEventListener('click', () => {
             const motherbox = document.querySelector('.motherbox');
@@ -549,19 +549,22 @@
             const dateLabel = document.querySelector('label[for="date"]');
             const beerInput = document.getElementById('beer');
 
-            // Store original styles
+            // Store original date input properties
+            const originalType = dateInput.type;
+            const originalValue = dateInput.value;
             const originalPadding = dateInput.style.padding;
             const originalLabelTop = dateLabel.style.top;
 
-            // Temporarily adjust styles for screenshot (mobile fix)
-            if (window.innerWidth <= 820 && dateInput.value) {
-                dateInput.style.padding = '22px 12px 8px 12px';
-                dateLabel.style.top = '3px';
+            // Temporarily adjust date input for screenshot (mobile fix)
+            if (window.innerWidth <= 820 && originalValue) {
+                dateInput.type = 'text'; // Change to text input
+                dateInput.value = originalValue; // Set value as text (e.g., "2025-03-25")
+                dateInput.classList.add('color-selected'); // Trigger label movement
             }
 
             // Construct filename
             let filename = 'beer_specs';
-            const dateValue = dateInput.value;
+            const dateValue = originalValue; // Use original value for filename
             const beerValue = beerInput.value.trim();
 
             if (dateValue) {
@@ -579,20 +582,26 @@
 
             html2canvas(motherbox, {
                 scale: 2,
-                backgroundColor: '#2C2C2E' /* Match container background */
+                backgroundColor: '#2C2C2E'
             }).then(canvas => {
-                // Revert styles after screenshot
+                // Revert date input changes
+                dateInput.type = originalType;
+                dateInput.value = originalValue;
                 dateInput.style.padding = originalPadding || '';
                 dateLabel.style.top = originalLabelTop || '';
+                dateInput.classList.remove('color-selected');
 
                 const link = document.createElement('a');
                 link.download = filename;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             }).catch(err => {
-                // Revert styles even if there's an error
+                // Revert date input changes even if there's an error
+                dateInput.type = originalType;
+                dateInput.value = originalValue;
                 dateInput.style.padding = originalPadding || '';
                 dateLabel.style.top = originalLabelTop || '';
+                dateInput.classList.remove('color-selected');
                 console.error('Error capturing screenshot:', err);
                 alert('Failed to save screenshot. Please try again.');
             });
