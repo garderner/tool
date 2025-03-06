@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Technical Sheets</title>
+    <title>Beer Specs</title> <!-- Updated title -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600&display=swap');
 
         html, body {
-            height: 100%;
             margin: 0;
             padding: 0;
-            overflow: hidden;
         }
 
         body {
@@ -20,13 +18,10 @@
             background-attachment: fixed;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* Changed from center to allow scrolling from top */
             min-height: 100vh;
             color: #1d1d1f;
             padding: 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
             box-sizing: border-box;
         }
@@ -40,8 +35,8 @@
             width: 600px;
             transition: all 0.3s ease;
             box-sizing: border-box;
-            max-height: 100vh;
-            overflow-y: auto;
+            max-height: none; /* Remove max-height restriction */
+            overflow-y: visible; /* Allow overflow */
         }
 
         .motherbox:hover {
@@ -71,6 +66,10 @@
 
         .beer-style-group {
             margin: 20px 0 0 0;
+        }
+
+        .beer-color-group {
+            margin-bottom: 0;
         }
 
         .columns-container {
@@ -201,10 +200,6 @@
             cursor: pointer;
         }
 
-        .beer-color-group {
-            margin-bottom: 0; /* Remove bottom margin for Beer Color */
-        }
-
         .color-strip {
             display: none;
             position: absolute;
@@ -274,7 +269,7 @@
 </head>
 <body>
     <div class="motherbox">
-        <h1>Technical Sheets</h1>
+        <h1>Beer Specs</h1> <!-- Changed from "Technical Sheets" -->
         
         <div class="info-section">
             <div class="input-group">
@@ -295,7 +290,7 @@
                     <label for="beer-style">Beer Style</label>
                 </div>
             </div>
-            <div class="input-group beer-color-group"> <!-- Added class for styling -->
+            <div class="input-group beer-color-group">
                 <div class="input-container beer-color-container">
                     <input type="text" id="color-input" readonly placeholder=" ">
                     <label for="color-input">Beer Color</label>
@@ -467,7 +462,7 @@
         const colorStrip = document.getElementById('color-strip');
         const colorLabel = document.querySelector('label[for="color-input"]');
         const colors = ['#F6F513', '#BF923B', '#BC6733', '#8D4C32', '#5D341A', '#261716', '#030403'];
-        const darkColors = ['#261716', '#5D341A', '#030403']; // Colors requiring white label
+        const darkColors = ['#261716', '#5D341A', '#030403'];
 
         colorInput.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -488,11 +483,10 @@
             const luminance = calculateLuminance(selectedColor);
             colorInput.style.color = luminance > 0.5 ? '#1d1d1f' : '#ffffff';
             
-            // Set label color based on selected color
             if (darkColors.includes(selectedColor)) {
                 colorLabel.style.color = '#ffffff';
             } else {
-                colorLabel.style.color = '#1d1d1f'; // Default color for lighter backgrounds
+                colorLabel.style.color = '#1d1d1f';
             }
 
             colorStrip.classList.remove('visible');
