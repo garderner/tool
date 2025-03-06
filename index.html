@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Beer Specs</title> <!-- Updated title -->
+    <title>Beer Specs</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600&display=swap');
 
@@ -17,8 +18,8 @@
             background: linear-gradient(180deg, #f5f5f7 0%, #ffffff 100%);
             background-attachment: fixed;
             display: flex;
-            justify-content: center;
-            align-items: flex-start; /* Changed from center to allow scrolling from top */
+            flex-direction: column; /* Stack containers vertically */
+            align-items: center; /* Center horizontally */
             min-height: 100vh;
             color: #1d1d1f;
             padding: 20px;
@@ -35,8 +36,9 @@
             width: 600px;
             transition: all 0.3s ease;
             box-sizing: border-box;
-            max-height: none; /* Remove max-height restriction */
-            overflow-y: visible; /* Allow overflow */
+            max-height: none;
+            overflow-y: visible;
+            margin-bottom: 20px; /* Space between motherbox and save-container */
         }
 
         .motherbox:hover {
@@ -224,8 +226,40 @@
             display: block;
         }
 
+        /* Save container styles */
+        .save-container {
+            background-color: #ffffff;
+            padding: 20px; /* Reduced padding for a smaller box */
+            border-radius: 18px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 600px; /* Match motherbox width */
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .save-container:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .save-button {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #007aff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .save-button:hover {
+            background-color: #005bb5;
+        }
+
         @media (max-width: 820px) {
-            .motherbox {
+            .motherbox, .save-container {
                 padding: 30px;
                 width: 100%;
                 max-width: 600px;
@@ -264,12 +298,21 @@
             .color-strip {
                 height: 50px;
             }
+
+            .save-container {
+                padding: 20px; /* Consistent padding on smaller screens */
+            }
+
+            .save-button {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="motherbox">
-        <h1>Beer Specs</h1> <!-- Changed from "Technical Sheets" -->
+        <h1>Beer Specs</h1>
         
         <div class="info-section">
             <div class="input-group">
@@ -359,6 +402,11 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Separate Save Container -->
+    <div class="save-container">
+        <button class="save-button" id="save-button">Save</button>
     </div>
 
     <script>
@@ -491,6 +539,24 @@
 
             colorStrip.classList.remove('visible');
             colorInput.classList.add('color-selected');
+        });
+
+        // Save button functionality
+        const saveButton = document.getElementById('save-button');
+        saveButton.addEventListener('click', () => {
+            const motherbox = document.querySelector('.motherbox');
+            html2canvas(motherbox, {
+                scale: 2,
+                backgroundColor: '#ffffff'
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'beer_specs.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                console.error('Error capturing screenshot:', err);
+                alert('Failed to save screenshot. Please try again.');
+            });
         });
 
         function calculateLuminance(color) {
