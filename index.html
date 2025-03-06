@@ -50,8 +50,19 @@
         }
 
         .input-group {
-            margin: 10px 0;
+            margin: 20px 0;
             text-align: left;
+        }
+
+        .columns-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .column {
+            flex: 1;
+            max-width: calc(50% - 10px);
         }
 
         label {
@@ -79,11 +90,6 @@
             box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
         }
 
-        /* Define placeholder color explicitly to match suffix */
-        input::placeholder {
-            color: #999; /* Common default placeholder color */
-        }
-
         .input-with-suffix {
             position: relative;
             display: flex;
@@ -101,7 +107,7 @@
             transform: translateY(-50%);
             font-size: 16px;
             font-weight: 500;
-            color: #999; /* Match placeholder color */
+            color: #6e6e73;
             pointer-events: none;
         }
 
@@ -113,22 +119,6 @@
         input[type="number"]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
-        }
-
-        .input-with-suffix input[type="number"] {
-            position: relative;
-        }
-
-        .calculator-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            width: 100%;
-        }
-
-        .column {
-            display: flex;
-            flex-direction: column;
         }
 
         .result {
@@ -183,10 +173,6 @@
                 font-size: 14px;
             }
 
-            .calculator-columns {
-                gap: 15px;
-            }
-
             .result h3 {
                 font-size: 16px;
             }
@@ -201,7 +187,6 @@
     <div class="motherbox">
         <h1>Technical Sheets</h1>
         
-        <!-- New Info Section -->
         <div class="info-section">
             <div class="input-group">
                 <label for="date">Date</label>
@@ -217,9 +202,8 @@
             </div>
         </div>
 
-        <!-- Combined Calculator Section -->
         <div class="calculator-section">
-            <div class="calculator-columns">
+            <div class="columns-container">
                 <div class="column">
                     <div class="input-group">
                         <label for="av">ABV</label>
@@ -255,7 +239,7 @@
             <div class="result">
                 <h3>Results</h3>
                 <div class="result-box">
-                    <p id="og-value">Enter values to see OG</p>
+                    <p id="og-value">Enter values to see Original Gravity</p>
                     <p id="calorie-value">Enter values to see Calories</p>
                     <p id="corrected-sg-value">Enter temperature and SG to see Corrected SG</p>
                     <p id="corrected-p-value"></p>
@@ -265,42 +249,38 @@
     </div>
 
     <script>
-        // Function to update ABV and Volume from Beer input
         function updateFieldsFromBeer() {
             const beerInput = document.getElementById('beer').value;
             const abvInput = document.getElementById('av');
             const volumeInput = document.getElementById('volume');
             
-            // Update ABV: Extract number before '%'
             const abvMatch = beerInput.match(/(\d*\.?\d+)%/);
             if (abvMatch) {
                 const abvValue = parseFloat(abvMatch[1]);
                 abvInput.value = abvValue;
+                abvInput.dispatchEvent(new Event('input'));
             } else {
                 abvInput.value = '';
             }
 
-            // Update Volume: Extract number before 'cl'
             const volumeMatch = beerInput.match(/(\d*\.?\d+)cl/);
             if (volumeMatch) {
                 const volumeValue = volumeMatch[1];
                 volumeInput.value = volumeValue;
+                volumeInput.dispatchEvent(new Event('input'));
             } else {
                 volumeInput.value = '';
             }
 
-            // Trigger calculations after updating fields
             calculateAll();
         }
 
-        // Calculation function
         function calculateAll() {
             const fg = parseFloat(document.getElementById('fg').value);
             const av = parseFloat(document.getElementById('av').value);
+            const volume = parseFloat(document.getElementById('volume').value);
             const celsius = parseFloat(document.getElementById('celsiusInput').value);
-            const volume = parseFloat(document.getElementById('volume').value) || 33;
 
-            // OG and Calorie Calculation
             if (!isNaN(fg) && !isNaN(av)) {
                 const a = 76.08;
                 const b = 0.794;
@@ -310,19 +290,18 @@
                 const denominator = (a * fg) + (av * b);
                 const og = numerator / denominator;
 
-                const calorieContent = (3621 * fg * (
+                const calorieContent = 3621 * fg * (
                     (0.8114 * fg + 0.1886 * og - 1) + 
-                    0.53 * ((og - fg) / (1.775 - og))
-                ) * volume / 33);
+                    0.53 * ((og - fg) / (1.775 - og)) * (isNaN(volume) ? 1 : volume / 33)
+                );
 
-                document.getElementById('og-value').innerText = `OG: ${og.toFixed(3)}`;
+                document.getElementById('og-value').innerText = `Original Gravity: ${og.toFixed(3)}`;
                 document.getElementById('calorie-value').innerText = `Calories: ${calorieContent.toFixed(0)} cal`;
             } else {
-                document.getElementById('og-value').innerText = "Please enter FG and ABV for OG.";
+                document.getElementById('og-value').innerText = "Please enter FG and ABV for Original Gravity.";
                 document.getElementById('calorie-value').innerText = "Please enter FG and ABV for Calories.";
             }
 
-            // Corrected SG Calculation
             if (!isNaN(celsius) && !isNaN(fg)) {
                 const fahrenheit = (celsius * 9/5) + 32;
                 const X = fahrenheit;
@@ -340,7 +319,7 @@
                 const correctedSG = (correctedSGPoints / 1000) + 1;
                 const correctedP = 1000 * (correctedSG - 1) / 4;
 
-                document.getElementById('corrected-sg-value').innerText = `Corrected SG: ${correctedSG.toFixed(0)}`;
+                document.getElementById('corrected-sg-value').innerText = `Corrected SG: ${correctedSG.toFixed(3)}`;
                 document.getElementById('corrected-p-value').innerText = `Corrected °P: ${correctedP.toFixed(3)}`;
             } else {
                 document.getElementById('corrected-sg-value').innerText = "Please enter temperature and FG for Corrected SG.";
@@ -348,15 +327,12 @@
             }
         }
 
-        // Add event listeners for real-time updates
-        document.getElementById('beer').addEventListener('input', updateFieldsFromBeer);
-        document.getElementById('fg').addEventListener('input', calculateAll);
-        document.getElementById('av').addEventListener('input', calculateAll);
-        document.getElementById('celsiusInput').addEventListener('input', calculateAll);
-        document.getElementById('volume').addEventListener('input', calculateAll);
+        const inputs = ['fg', 'av', 'celsiusInput', 'volume'];
+        inputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', calculateAll);
+        });
 
-        // Initial calculation on page load
-        calculateAll();
+        document.getElementById('beer').addEventListener('input', updateFieldsFromBeer);
     </script>
 </body>
 </html>
