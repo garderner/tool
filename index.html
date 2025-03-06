@@ -15,23 +15,23 @@
 
         body {
             font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", Arial, sans-serif;
-            background: linear-gradient(180deg, #f5f5f7 0%, #ffffff 100%);
+            background: linear-gradient(180deg, #1C2526 0%, #212121 100%); /* Dark gradient */
             background-attachment: fixed;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            color: #1d1d1f;
+            color: #E8ECEF; /* Light gray text */
             padding: 20px;
             width: 100%;
             box-sizing: border-box;
         }
 
         .motherbox {
-            background-color: #ffffff;
+            background-color: #2C2C2E; /* Darker gray container */
             padding: 40px;
             border-radius: 18px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); /* Subtle shadow */
             text-align: center;
             width: 600px;
             transition: all 0.3s ease;
@@ -42,14 +42,14 @@
         }
 
         .motherbox:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* Slightly stronger shadow */
         }
 
         h1 {
             font-size: 28px;
             font-weight: 600;
             margin-bottom: 20px;
-            color: #1d1d1f;
+            color: #FFFFFF; /* White for emphasis */
         }
 
         .info-section {
@@ -99,18 +99,19 @@
             width: 100%;
             height: 55px;
             padding: 20px 12px 10px 12px;
-            border: 1px solid #d2d2d7;
+            border: 1px solid #3C3C3E; /* Dark border */
             border-radius: 10px;
             font-size: 16px;
-            background-color: #f5f5f7;
+            background-color: #3C3C3E; /* Dark input background */
+            color: #E8ECEF; /* Light text */
             box-sizing: border-box;
             transition: border-color 0.2s ease;
         }
 
         input:focus {
             outline: none;
-            border-color: #007aff;
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+            border-color: #007AFF; /* Apple blue */
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3); /* Subtle blue glow */
         }
 
         label {
@@ -120,7 +121,7 @@
             transform: translateY(-50%);
             font-size: 16px;
             font-weight: 400;
-            color: #6e6e73;
+            color: #8E8E93; /* Gray placeholder-like color */
             pointer-events: none;
             transition: all 0.2s ease;
         }
@@ -132,7 +133,7 @@
             transform: translateY(0);
             font-size: 12px;
             font-weight: 500;
-            color: #1d1d1f;
+            color: #E8ECEF; /* Light gray when active */
         }
 
         .input-with-suffix {
@@ -154,7 +155,7 @@
             transform: translateY(-50%);
             font-size: 16px;
             font-weight: 500;
-            color: #6e6e73;
+            color: #8E8E93; /* Gray suffix */
             pointer-events: none;
         }
 
@@ -228,10 +229,10 @@
 
         /* Save container styles */
         .save-container {
-            background-color: #ffffff;
+            background-color: #2C2C2E; /* Match motherbox */
             padding: 20px;
             border-radius: 18px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
             text-align: center;
             width: 600px;
             transition: all 0.3s ease;
@@ -239,15 +240,15 @@
         }
 
         .save-container:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
 
         .save-button {
             padding: 12px 24px;
             font-size: 16px;
             font-weight: 600;
-            color: #ffffff;
-            background-color: #007aff;
+            color: #FFFFFF;
+            background-color: #007AFF; /* Apple blue */
             border: none;
             border-radius: 10px;
             cursor: pointer;
@@ -255,7 +256,7 @@
         }
 
         .save-button:hover {
-            background-color: #005bb5;
+            background-color: #005BB5; /* Darker blue */
         }
 
         @media (max-width: 820px) {
@@ -528,12 +529,12 @@
             
             colorInput.style.backgroundColor = selectedColor;
             const luminance = calculateLuminance(selectedColor);
-            colorInput.style.color = luminance > 0.5 ? '#1d1d1f' : '#ffffff';
+            colorInput.style.color = luminance > 0.5 ? '#E8ECEF' : '#FFFFFF'; /* Adjusted for dark mode */
             
             if (darkColors.includes(selectedColor)) {
-                colorLabel.style.color = '#ffffff';
+                colorLabel.style.color = '#FFFFFF';
             } else {
-                colorLabel.style.color = '#1d1d1f';
+                colorLabel.style.color = '#E8ECEF';
             }
 
             colorStrip.classList.remove('visible');
@@ -559,33 +560,33 @@
             }
 
             // Construct filename
-            let filename = 'beer_specs'; // Default if no inputs
-            const dateValue = dateInput.value; // e.g., "2025-03-25"
-            const beerValue = beerInput.value.trim(); // e.g., "Omnipollo 8.2% 33cl"
+            let filename = 'beer_specs';
+            const dateValue = dateInput.value;
+            const beerValue = beerInput.value.trim();
 
             if (dateValue) {
-                const dateParts = dateValue.split('-'); // ["2025", "03", "25"]
-                const dateStr = dateParts[0].slice(-2) + dateParts[1] + dateParts[2]; // "250325"
+                const dateParts = dateValue.split('-');
+                const dateStr = dateParts[0].slice(-2) + dateParts[1] + dateParts[2];
                 filename = dateStr;
             }
 
             if (beerValue) {
-                const beerName = beerValue.split(/[\s%]/)[0]; // Split on space or %, take first part: "Omnipollo"
+                const beerName = beerValue.split(/[\s%]/)[0];
                 filename = dateValue ? `${filename}_${beerName}` : beerName;
             }
 
-            filename = filename.replace(/[^a-zA-Z0-9_]/g, '') + '.png'; // Clean filename, add extension
+            filename = filename.replace(/[^a-zA-Z0-9_]/g, '') + '.png';
 
             html2canvas(motherbox, {
                 scale: 2,
-                backgroundColor: '#ffffff'
+                backgroundColor: '#2C2C2E' /* Match container background */
             }).then(canvas => {
                 // Revert styles after screenshot
                 dateInput.style.padding = originalPadding || '';
                 dateLabel.style.top = originalLabelTop || '';
 
                 const link = document.createElement('a');
-                link.download = filename; // Dynamic filename, e.g., "250325_Omnipollo.png"
+                link.download = filename;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             }).catch(err => {
